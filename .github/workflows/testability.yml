@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [main, dev]
   push:
-    branches: [main]
+    branches: [main, upgrade/reliability-20261011]
 
 permissions:
   contents: read
@@ -21,7 +21,7 @@ permissions:
 # checks. The script is stdlib-only — no package install or KiCad needed.
 jobs:
   testability:
-    if: github.repository == 'blwfish/kicad-mcp'
+    if: (github.repository == 'blwfish/kicad-mcp' || github.repository == 'yniantongtian-oss/kicad-mcp-1')
     name: testability-audit
     runs-on: ubuntu-latest
     steps:
@@ -30,4 +30,4 @@ jobs:
         with:
           python-version: "3.12"
       - name: Run testability audit (report-only)
-        run: python scripts/audit_testability.py
+        run: python scripts/audit_testability.py --check

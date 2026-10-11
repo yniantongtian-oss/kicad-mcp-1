@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [main, dev]
   push:
-    branches: [main]
+    branches: [main, upgrade/reliability-20261011]
   # Run on the merge queue's temp refs so this workflow's required checks
   # (pytest, check-mypy) gate queued PRs — without this the queue would wait
   # forever for a check that never runs.
@@ -18,7 +18,7 @@ jobs:
   # what branch protection requires (it requires a single check named
   # exactly "pytest"); the umbrella job below provides that.
   matrix:
-    if: github.repository == 'blwfish/kicad-mcp'
+    if: (github.repository == 'blwfish/kicad-mcp' || github.repository == 'yniantongtian-oss/kicad-mcp-1')
     name: pytest (${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
@@ -37,7 +37,7 @@ jobs:
         run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends kicad-symbols
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -56,7 +56,7 @@ jobs:
   pytest:
     name: pytest
     needs: matrix
-    if: ${{ (github.repository == 'blwfish/kicad-mcp') && (always()) }}
+    if: ${{ always() && (github.repository == 'blwfish/kicad-mcp' || github.repository == 'yniantongtian-oss/kicad-mcp-1') }}
     runs-on: ubuntu-latest
     steps:
       - name: Verify all matrix jobs passed
@@ -69,14 +69,14 @@ jobs:
           exit 1
 
   mypy:
-    if: github.repository == 'blwfish/kicad-mcp'
+    if: (github.repository == 'blwfish/kicad-mcp' || github.repository == 'yniantongtian-oss/kicad-mcp-1')
     name: check-mypy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
         with:
           python-version: "3.10"
 

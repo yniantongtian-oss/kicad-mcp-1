@@ -21,3 +21,7 @@ upstream publishing, bot comments and deployment jobs do not run here.
 
 Reviewed source baseline: `blwfish/kicad-mcp` release `v0.18.1`,
 commit `f754c12e10210a0d40345a06050aae47191d3999`. The original fork history is retained.
+
+Fork acceptance additionally runs the frozen uv test matrix, mypy, and the
+existing testability ratchet. KiCad symbol fixtures are installed on runners.
+These offline checks do not establish physical PCB performance.
