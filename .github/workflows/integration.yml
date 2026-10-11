@@ -33,6 +33,7 @@ concurrency:
 
 jobs:
   integration:
+    if: github.repository == 'blwfish/kicad-mcp'
     name: integration / kicad-${{ matrix.kicad }}
     runs-on: [self-hosted, macOS]
     strategy:
@@ -56,7 +57,7 @@ jobs:
     continue-on-error: ${{ matrix.continue_on_error }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Verify KiCad install
         run: |
@@ -94,7 +95,7 @@ jobs:
     # already visible to whoever's iterating on that branch. Filed for
     # push/schedule/merge_group instead — the cases where nothing else is
     # watching, which is exactly how this broke silently for a month.
-    if: always() && needs.integration.result == 'failure' && github.event_name != 'pull_request'
+    if: ${{ (github.repository == 'blwfish/kicad-mcp') && (always() && needs.integration.result == 'failure' && github.event_name != 'pull_request') }}
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -110,7 +111,7 @@ jobs:
             2>/dev/null || true
 
       - name: File or update tracking issue
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           script: |
             const title = 'integration / kicad-10.0 is failing';

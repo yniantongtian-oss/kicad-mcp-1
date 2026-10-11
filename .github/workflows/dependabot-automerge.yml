@@ -32,9 +32,9 @@ permissions:
 jobs:
   automerge:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
+    if: ${{ (github.repository == 'blwfish/kicad-mcp') && (github.actor == 'dependabot[bot]') }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Ensure dependabot-needs-review label exists
         # gh pr edit --add-label fails if the label doesn't exist.

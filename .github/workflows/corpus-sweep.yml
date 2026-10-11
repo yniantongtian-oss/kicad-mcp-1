@@ -27,12 +27,13 @@ concurrency:
 
 jobs:
   sweep:
+    if: github.repository == 'blwfish/kicad-mcp'
     name: corpus fail-safe sweep
     runs-on: [self-hosted, macOS]
     timeout-minutes: 15
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Install Python dependencies
         run: uv sync
@@ -42,7 +43,7 @@ jobs:
 
       - name: Upload per-sketch results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: corpus-sweep-results
           path: corpus-sweep-results.json

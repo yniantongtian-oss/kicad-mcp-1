@@ -18,6 +18,7 @@ jobs:
   # what branch protection requires (it requires a single check named
   # exactly "pytest"); the umbrella job below provides that.
   matrix:
+    if: github.repository == 'blwfish/kicad-mcp'
     name: pytest (${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
@@ -25,7 +26,7 @@ jobs:
         python-version: ["3.10", "3.12", "3.13"]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Install KiCad symbol libraries
         # 13 tests load symbols (Device:R, etc.) via kicad-sch-api, which
@@ -55,7 +56,7 @@ jobs:
   pytest:
     name: pytest
     needs: matrix
-    if: always()
+    if: ${{ (github.repository == 'blwfish/kicad-mcp') && (always()) }}
     runs-on: ubuntu-latest
     steps:
       - name: Verify all matrix jobs passed
@@ -68,10 +69,11 @@ jobs:
           exit 1
 
   mypy:
+    if: github.repository == 'blwfish/kicad-mcp'
     name: check-mypy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
